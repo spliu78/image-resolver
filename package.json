@@ -1,32 +1,38 @@
 {
-  "name": "image-resolver",
-  "version": "1.0.0",
-  "description": "minify &amp; watermark with ffmpeg.wasm",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky install"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/spliu78/image-resolver.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/spliu78/image-resolver/issues"
-  },
-  "homepage": "https://github.com/spliu78/image-resolver#readme",
-  "dependencies": {
-    "@ffmpeg/core": "^0.10.0",
-    "@ffmpeg/ffmpeg": "^0.10.1",
-    "image-size": "^1.0.0"
-  },
-  "devDependencies": {
-    "@commitlint/cli": "^13.2.0",
-    "@commitlint/config-conventional": "^13.2.0",
-    "@types/node": "^16.10.1",
-    "husky": "^7.0.2"
-  }
+    "name": "image-resolver",
+    "version": "1.0.0",
+    "description": "minify &amp; watermark with ffmpeg.wasm",
+    "main": "./dist/src/ir.js",
+    "bin": {
+        "ir": "./dist/src/ir.js"
+    },
+    "scripts": {
+        "test": "tsc && node --experimental-wasm-threads --experimental-wasm-bulk-memory dist/example/example.js",
+        "prepare": "husky install",
+        "build": "tsc"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/spliu78/image-resolver.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/spliu78/image-resolver/issues"
+    },
+    "homepage": "https://github.com/spliu78/image-resolver#readme",
+    "dependencies": {
+        "@ffmpeg/core": "^0.10.0",
+        "@ffmpeg/ffmpeg": "^0.10.1",
+        "commander": "^8.2.0",
+        "image-size": "^1.0.0"
+    },
+    "devDependencies": {
+        "@commitlint/cli": "^13.2.0",
+        "@commitlint/config-conventional": "^13.2.0",
+        "@types/node": "^16.10.1",
+        "husky": "^7.0.2",
+        "ts-node": "^9.1.1"
+    }
 }

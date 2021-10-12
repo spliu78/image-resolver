@@ -11,9 +11,9 @@ export class ImageResolver {
     inputName = 'input';
     outputName = '';
     ext = '';
-    constructor(image?: string) {
+    constructor(image?: string, log = false) {
         this.ffmpeg = createFFmpeg({
-            log: true,
+            log,
         });
         image && this.setImage(image);
     }
@@ -26,7 +26,6 @@ export class ImageResolver {
     async minify(width: number = -1, height: number = -1, ext: string) {
         if (ext) this.ext = ext[0] === '.' ? ext : `.${ext}`;
         const scalConf = `scale=${width}:${height}`;
-
         // xxx.minify.ext
         this.outputName = `${path.basename(this.inputName, this.ext)}.minify${this.ext}`;
         await this.ffmpeg.run('-i', this.inputName, '-vf', scalConf, this.outputName);
@@ -34,9 +33,9 @@ export class ImageResolver {
     }
     async watermark(
         text: string, fontsize: number, fontfile: string,
-        option: {
-            x: number, y: number, fontcolor: string, border: number, bordercolor: string
-        } = { x: 10, y: 10, fontcolor: 'white', border: 5, bordercolor: '#A9A9A9' }
+        option?: {
+            x?: number, y?: number, fontcolor?: string, border?: number, bordercolor?: string
+        }
     ) {
         const fontFileName = path.basename(fontfile);
         this.ffmpeg.FS('writeFile', fontFileName, await fetchFile(fontfile));
@@ -45,7 +44,6 @@ export class ImageResolver {
         const { x, y, fontcolor, border, bordercolor } = { ...defaultOption, ...option };
         const watermarkConf = `drawtext=text=\'${text}\':borderw=${border}:bordercolor=${bordercolor}`
             + `:x=${x}:y=H-th-${y}:fontfile=${fontFileName}:fontsize=${fontsize}:fontcolor=${fontcolor}`;
-
         // xxx.watermark.ext
         this.outputName = `${path.basename(this.inputName, this.ext)}.watermark${this.ext}`;
         await this.ffmpeg.run('-i', this.inputName, '-vf', watermarkConf, this.outputName);
@@ -67,14 +65,4 @@ export class ImageResolver {
     getFFmpeg() { return this.ffmpeg; }
 }
 
-(async () => {
-    const ir = new ImageResolver();
-    await ir.init();
-    await ir.setImage(path.join(__dirname, '../src/assets/parrot.jpg'));
-    console.log(await ir.getSize());
-    await ir.minify(-1, -1, 'jpg');
-    await ir.watermark('xiagao', 24, path.join(__dirname, '../src/assets/arial.ttf'));
-    await ir.output(path.join(__dirname, './test.jpg'));
-    await ir.setImage(path.join(__dirname, './test.jpg'));
-    console.log(await ir.getSize());
-})();
+
